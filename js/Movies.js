@@ -26,3 +26,32 @@ $(document).ready(function () {
     })
 });
 
+let movieSubmission = {
+    "title": $("#modalMovieTitle").val(),
+    "rating":1
+}
+
+$("#save-changes-button").click(function () {
+    console.log($("#modalMovieTitle").val())
+    console.log($("inline"))
+})
+
+function pushToMovies() {
+    const userMovie = {
+        "title": "My favorite movie",
+        "rating": 1
+    };
+    const url = "https://changeable-sharp-talk.glitch.me/movies"
+    const options = {
+        "method": "POST",
+        "headers": {
+            "Content-Type": "application/json",
+        },
+        "body": JSON.stringify(userMovie)
+    };
+    fetch(url,options)
+        .then(response => console.log(response))
+        .catch(error => console.error(error))
+}
+
+pushToMovies();
