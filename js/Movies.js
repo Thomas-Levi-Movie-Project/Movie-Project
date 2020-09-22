@@ -1,6 +1,4 @@
 
-// setTimeout(hideLoading, 1500);
-
 function hideLoading() {
     $("#loading-message").css("display", "none");
 }
@@ -13,7 +11,6 @@ $(document).ready(function () {
                 hideLoading();
                 let moviesHTML = "";
                 listOfMovies.forEach(function(element) {
-                    console.log(element)
                     moviesHTML += `<div class="card"><div class="card-body">`
                     moviesHTML += `<h5 class="card-title">Title: ${element.title}</h5>`
                     moviesHTML += `<p class="card-text">Rating: ${element.rating}</p>`
@@ -25,15 +22,7 @@ $(document).ready(function () {
 
     $("#add-btn").click((e) => {
         e.preventDefault();
-        console.log("Button Clicked")
         $("#add-modal").modal("show")
     })
 });
 
-//
-// <div class="card">
-//     <div class="card-body">
-//         <h5 class="card-title">Card title</h5>
-//         <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-//     </div>
-// </div>
