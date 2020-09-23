@@ -90,6 +90,10 @@ function pushToMovies(movieObject) {
 
     // HTML refreshed
 
+    // $(".close").click(function () {
+    //     deleteMovies()
+    // })
+
 }
 
 // pushToMovies();
