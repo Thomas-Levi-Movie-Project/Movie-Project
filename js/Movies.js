@@ -1,3 +1,4 @@
+const url = "https://changeable-sharp-talk.glitch.me/movies"
 
 function hideLoading() {
     $("#loading-message").css("display", "none");
@@ -12,6 +13,7 @@ function toggleMovieHTML() {
 }
 
 
+
 $(document).ready(function () {
 
     fetch("https://changeable-sharp-talk.glitch.me/movies")
@@ -21,8 +23,11 @@ $(document).ready(function () {
                 let moviesHTML = "";
                 listOfMovies.forEach(function(element) {
                     moviesHTML += `<div class="card"><div class="card-body">`
+                    moviesHTML += `<button type="button" id="${element.id}-button" class="close" data-dismiss="modal" aria-label="Close">
+                                   <span aria-hidden="true">&times;</span></button>`
                     moviesHTML += `<h5 class="card-title">Title: ${element.title}</h5>`
                     moviesHTML += `<p class="card-text">Rating: ${element.rating}</p>`
+                    moviesHTML += `<p class="card-text">ID: ${element.id}</p>`
                     moviesHTML += `</div></div>`
                 })
                 $("#movies-cards-container").append(moviesHTML);
@@ -46,7 +51,7 @@ $("#save-changes-button").click(function () {
 
 function pushToMovies(movieObject) {
 
-    const url = "https://changeable-sharp-talk.glitch.me/movies"
+     const url = "https://changeable-sharp-talk.glitch.me/movies"
     const options = {
         "method": "POST",
         "headers": {
@@ -85,6 +90,24 @@ function pushToMovies(movieObject) {
 
     // HTML refreshed
 
+    // $(".close").click(function () {
+    //     deleteMovies()
+    // })
+
 }
 
 // pushToMovies();
+
+function deleteMovies(movieId) {
+
+    const deleteOptions ={
+        method: "DELETE",
+        // headers:{
+        //     "Content-Type": "applications/json"
+        // }
+    }
+    fetch(`https://changeable-sharp-talk.glitch.me/movies/${movieId}`, deleteOptions)
+        .then(response => console.log(response))
+        .catch(error => console.error(error))
+
+}
