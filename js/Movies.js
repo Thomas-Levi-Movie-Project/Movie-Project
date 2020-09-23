@@ -3,12 +3,21 @@ function hideLoading() {
     $("#loading-message").css("display", "none");
 }
 
+function toggleLoading() {
+    $("#loading-message").toggleClass("d-none");
+}
+
+function toggleMovieHTML() {
+    $("#movies-cards-container").toggleClass("d-none");
+}
+
+
 $(document).ready(function () {
 
     fetch("https://changeable-sharp-talk.glitch.me/movies")
         .then(response => response.json())
             .then(listOfMovies =>{
-                hideLoading();
+                toggleLoading();
                 let moviesHTML = "";
                 listOfMovies.forEach(function(element) {
                     moviesHTML += `<div class="card"><div class="card-body">`
@@ -26,32 +35,56 @@ $(document).ready(function () {
     })
 });
 
-let movieSubmission = {
-    "title": $("#modalMovieTitle").val(),
-    "rating":1
-}
-
 $("#save-changes-button").click(function () {
-    console.log($("#modalMovieTitle").val())
-    console.log($("inline"))
+    let movieObject = {
+        title: $("#modalMovieTitle").val(),
+        rating: $("input[name='inlineRadioOptions']:checked").val()
+    }
+    console.log("Movie Object: ", movieObject);
+    pushToMovies(movieObject);
 })
 
-function pushToMovies() {
-    const userMovie = {
-        "title": "My favorite movie",
-        "rating": 1
-    };
+function pushToMovies(movieObject) {
+
     const url = "https://changeable-sharp-talk.glitch.me/movies"
     const options = {
         "method": "POST",
         "headers": {
             "Content-Type": "application/json",
         },
-        "body": JSON.stringify(userMovie)
+        "body": JSON.stringify(movieObject)
     };
+    // Movie added
     fetch(url,options)
         .then(response => console.log(response))
         .catch(error => console.error(error))
+
+    // Modal closes
+    $("#add-modal").modal("hide");
+
+    // HTML disappears, Loading appears
+    toggleMovieHTML();
+    toggleLoading();
+
+    fetch("https://changeable-sharp-talk.glitch.me/movies")
+        .then(response => response.json())
+        .then(listOfMovies => {
+            let moviesHTML = "";
+            moviesHTML += `<div class="card"><div class="card-body">`
+            moviesHTML += `<h5 class="card-title">Title: ${listOfMovies[listOfMovies.length - 1].title}</h5>`
+            moviesHTML += `<p class="card-text">Rating: ${listOfMovies[listOfMovies.length - 1].rating}</p>`
+            moviesHTML += `</div></div>`
+
+            $("#movies-cards-container").append(moviesHTML);
+            toggleLoading();
+            toggleMovieHTML();
+
+            // todo get the HTML appended properly, not currently appending for some reason
+        })
+        .catch(error => console.error(error));
+
+    // HTML refreshed
+
 }
 
-pushToMovies();
+// pushToMovies();
