@@ -1,9 +1,5 @@
 const url = "https://changeable-sharp-talk.glitch.me/movies"
 
-function hideLoading() {
-    $("#loading-message").css("display", "none");
-}
-
 function toggleLoading() {
     $("#loading-message").toggleClass("d-none");
 }
@@ -12,46 +8,16 @@ function toggleMovieHTML() {
     $("#movies-cards-container").toggleClass("d-none");
 }
 
-
-
-$(document).ready(function () {
-
-    fetch("https://changeable-sharp-talk.glitch.me/movies")
-        .then(response => response.json())
-            .then(listOfMovies =>{
-                toggleLoading();
-                let moviesHTML = "";
-                listOfMovies.forEach(function(element) {
-                    moviesHTML += `<div class="card"><div class="card-body">`
-                    moviesHTML += `<button type="button" id="${element.id}-button" class="close" data-dismiss="modal" aria-label="Close">
-                                   <span aria-hidden="true">&times;</span></button>`
-                    moviesHTML += `<h5 class="card-title">Title: ${element.title}</h5>`
-                    moviesHTML += `<p class="card-text">Rating: ${element.rating}</p>`
-                    moviesHTML += `<p class="card-text">ID: ${element.id}</p>`
-                    moviesHTML += `</div></div>`
-                })
-                $("#movies-cards-container").append(moviesHTML);
-            })
-        .catch(error => console.error(error));
-
-    $("#add-btn").click((e) => {
-        e.preventDefault();
-        $("#add-modal").modal("show")
-    })
-});
-
-$("#save-changes-button").click(function () {
-    let movieObject = {
-        title: $("#modalMovieTitle").val(),
-        rating: $("input[name='inlineRadioOptions']:checked").val()
+function deleteMovies(movieId) {
+    const deleteOptions ={
+        method: "DELETE",
     }
-    console.log("Movie Object: ", movieObject);
-    pushToMovies(movieObject);
-})
+    fetch(`${url}/${movieId}`, deleteOptions)
+        .then(response => console.log(response))
+        .catch(error => console.error(error))
+}
 
 function pushToMovies(movieObject) {
-
-     const url = "https://changeable-sharp-talk.glitch.me/movies"
     const options = {
         "method": "POST",
         "headers": {
@@ -71,13 +37,16 @@ function pushToMovies(movieObject) {
     toggleMovieHTML();
     toggleLoading();
 
-    fetch("https://changeable-sharp-talk.glitch.me/movies")
+    fetch(url)
         .then(response => response.json())
         .then(listOfMovies => {
             let moviesHTML = "";
-            moviesHTML += `<div class="card"><div class="card-body">`
+            moviesHTML += `<div class="card" data-id="${listOfMovies[listOfMovies.length - 1].id}"><div class="card-body">`
+            moviesHTML += `<button type="button" data-id="${listOfMovies[listOfMovies.length - 1].id}" id="${listOfMovies[listOfMovies.length - 1].id}-button" class="close" data-dismiss="modal" aria-label="Close">
+                                   <span aria-hidden="true">&times;</span></button>`
             moviesHTML += `<h5 class="card-title">Title: ${listOfMovies[listOfMovies.length - 1].title}</h5>`
             moviesHTML += `<p class="card-text">Rating: ${listOfMovies[listOfMovies.length - 1].rating}</p>`
+            moviesHTML += `<p class="card-text">ID: ${listOfMovies[listOfMovies.length - 1].id}</p>`
             moviesHTML += `</div></div>`
 
             $("#movies-cards-container").append(moviesHTML);
@@ -89,25 +58,44 @@ function pushToMovies(movieObject) {
         .catch(error => console.error(error));
 
     // HTML refreshed
-
-    // $(".close").click(function () {
-    //     deleteMovies()
-    // })
-
 }
 
-// pushToMovies();
+$(document).ready(function () {
+    fetch(url)
+        .then(response => response.json())
+            .then(listOfMovies =>{
+                toggleLoading();
+                let moviesHTML = "";
+                listOfMovies.forEach(function(element) {
+                    moviesHTML += `<div class="card" data-id="${element.id}"><div class="card-body">`
+                    moviesHTML += `<button type="button" data-id="${element.id}" id="${element.id}-button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>`
+                    moviesHTML += `<h5 class="card-title">Title: ${element.title}</h5>`
+                    moviesHTML += `<p class="card-text">Rating: ${element.rating}</p>`
+                    moviesHTML += `<p class="card-text">ID: ${element.id}</p>`
+                    moviesHTML += `</div></div>`
+                })
+                $("#movies-cards-container").append(moviesHTML);
 
-function deleteMovies(movieId) {
+                // todo We needed this event listener to be after the cards are populated, otherwise there were issues with the scope
+                $(".close").click(function() {
+                    deleteMovies($(this).attr("data-id"))
+                    console.log("Movie ID: ", $(this).attr("data-id"));
+                    console.log("Movie Deleted");
+                })
+            })
+        .catch(error => console.error(error));
 
-    const deleteOptions ={
-        method: "DELETE",
-        // headers:{
-        //     "Content-Type": "applications/json"
-        // }
+    $("#add-btn").click((e) => {
+        e.preventDefault();
+        $("#add-modal").modal("show")
+    })
+
+});
+
+$("#save-changes-button").click(function () {
+    let movieObject = {
+        title: $("#modalMovieTitle").val(),
+        rating: $("input[name='inlineRadioOptions']:checked").val()
     }
-    fetch(`https://changeable-sharp-talk.glitch.me/movies/${movieId}`, deleteOptions)
-        .then(response => console.log(response))
-        .catch(error => console.error(error))
-
-}
+    pushToMovies(movieObject);
+})
