@@ -9,10 +9,22 @@
     <link rel="stylesheet" href="css/movies.css">
 </head>
 <body>
-<div class="container-fluid" id="main-container">
-    <div class="container" id="loading-message">
-        Loading...
+<div id="loading-message" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Your Page Is Loading!</h5>
+            </div>
+            <div class="modal-body">
+                <p>Animation</p>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
     </div>
+</div>
+
+<!-- Add Movies Container-->
     <div class="container" id="movies-cards-container"></div>
     <div class="container mt-3" id="button-container">
         <button type="button" class="btn btn-primary btn-lg btn-block" id="add-btn">Add a Movie</button>

@@ -1,7 +1,11 @@
 const url = "https://changeable-sharp-talk.glitch.me/movies"
 
-function toggleLoading() {
-    $("#loading-message").toggleClass("d-none");
+function displayLoading() {
+    $("#loading-message").modal("show")
+}
+
+function disableLoading() {
+    $("#loading-message").modal("hide");
 }
 
 function toggleMovieHTML() {
@@ -48,12 +52,10 @@ function deleteMovies(movieId) {
         .then( moviesRerender =>{ fetch(url)
             .then(response => response.json())
             .then(listOfMovies => {
-                toggleLoading();
                 $("#movies-cards-container").empty();
                 listOfMovies.forEach(function (element) {
                     appendMovieHTML(buildMovieCard(element));
                 })
-                toggleLoading();
                 setupListeners();
             })
         });
@@ -79,7 +81,6 @@ function pushToMovies(movieObject) {
                     let newestMovie = listOfMovies[listOfMovies.length - 1]
                     console.log(newestMovie);
                     appendMovieHTML(buildMovieCard(newestMovie));
-                    toggleLoading();
                     toggleMovieHTML();
                     setupListeners();
                     // todo get the HTML appended properly, not currently appending for some reason
@@ -91,7 +92,7 @@ function pushToMovies(movieObject) {
 
     // HTML disappears, Loading appears
     toggleMovieHTML();
-    toggleLoading();
+    // toggleLoading();
 
 
 
@@ -105,7 +106,7 @@ $(document).ready(function () {
     fetch(url)
         .then(response => response.json())
             .then(listOfMovies => {
-                toggleLoading();
+                displayLoading();
                 listOfMovies.forEach(function (element) {
                     appendMovieHTML(buildMovieCard(element));
                 })
@@ -113,6 +114,14 @@ $(document).ready(function () {
                 setupListeners();
             })
         .catch(error => console.error(error));
+
+    fetch(url)
+        .then(response => console.log(response.json()))
+        .then(modalClose =>{
+            disableLoading()
+        });
+
+
 
     $("#add-btn").click((e) => {
         e.preventDefault();
@@ -124,4 +133,5 @@ $(document).ready(function () {
 
 $("#save-changes-button").click(function () {
    createMovies();
+
 })
