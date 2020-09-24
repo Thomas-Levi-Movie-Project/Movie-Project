@@ -31,6 +31,14 @@ function setupListeners(){
     })
 }
 
+function createMovies() {
+        let movieObject = {
+            title: $("#modalMovieTitle").val(),
+            rating: $("input[name='inlineRadioOptions']:checked").val()
+        }
+        pushToMovies(movieObject);
+}
+
 function deleteMovies(movieId) {
     const deleteOptions ={
         method: "DELETE",
@@ -64,6 +72,19 @@ function pushToMovies(movieObject) {
     fetch(url,options)
         .then(response => console.log(response))
         .catch(error => console.error(error))
+        .then( movieLoad => {
+            fetch(url)
+                .then(response => response.json())
+                .then(listOfMovies => {
+                    let newestMovie = listOfMovies[listOfMovies.length - 1]
+                    console.log(newestMovie);
+                    appendMovieHTML(buildMovieCard(newestMovie));
+                    toggleLoading();
+                    toggleMovieHTML();
+                    setupListeners();
+                    // todo get the HTML appended properly, not currently appending for some reason
+                })
+        })
 
     // Modal closes
     $("#add-modal").modal("hide");
@@ -72,20 +93,12 @@ function pushToMovies(movieObject) {
     toggleMovieHTML();
     toggleLoading();
 
-    fetch(url)
-        .then(response => response.json())
-        .then(listOfMovies => {
-            let newestMovie = listOfMovies[listOfMovies.length - 1]
-            appendMovieHTML(buildMovieCard(newestMovie));
-            toggleLoading();
-            toggleMovieHTML();
-            setupListeners();
 
-            // todo get the HTML appended properly, not currently appending for some reason
-        })
-        .catch(error => console.error(error));
 
-    // HTML refreshed
+
+
+
+
 }
 
 $(document).ready(function () {
@@ -106,12 +119,9 @@ $(document).ready(function () {
         $("#add-modal").modal("show")
     })
 
+
 });
 
 $("#save-changes-button").click(function () {
-    let movieObject = {
-        title: $("#modalMovieTitle").val(),
-        rating: $("input[name='inlineRadioOptions']:checked").val()
-    }
-    pushToMovies(movieObject);
+   createMovies();
 })
