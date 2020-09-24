@@ -10,12 +10,12 @@ function toggleMovieHTML() {
 // todo: Function to build a movie card using a movie object
 function buildMovieCard(movieObject) {
     let movieHTML = "";
-        movieHTML += `<div class="card"><div class="card-body">`
+        movieHTML += `<div class="card my-3"><div class="card-body">`
         movieHTML += `<button type="button" data-id="${movieObject.id}" id="${movieObject.id}-button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>`
-        movieHTML += `<h5 class="card-title" data-title="${movieObject.title}">Title: ${movieObject.title}</h5>`
-        movieHTML += `<p class="card-text" data-rating="${movieObject.rating}">Rating: ${movieObject.rating}</p>`
-        movieHTML += `<p class="card-text">ID: ${movieObject.id}</p>`
-        movieHTML += `<button type="button" data-id="${movieObject.id}" id="${movieObject.id}-edit-button" class="edit-btn btn btn-primary" data-dismiss="modal" aria-label="Edit"><span aria-hidden="true">Edit Movie</span></button>`
+        movieHTML += `<h5 class="card-title" data-title="${movieObject.title}"><span class="heading-font-cards">Title:</span> ${movieObject.title}</h5>`
+        movieHTML += `<p class="card-text" data-rating="${movieObject.rating}"><span class="heading-font-cards">Rating:</span> ${movieObject.rating}</p>`
+        // movieHTML += `<p class="card-text">ID: ${movieObject.id}</p>`
+        movieHTML += `<button type="button" data-id="${movieObject.id}" id="${movieObject.id}-edit-button" class="edit-btn btn btn-danger" data-dismiss="modal" aria-label="Edit"><span class="heading-font-cards" aria-hidden="true">Edit Movie</span></button>`
         movieHTML += `</div></div>`
     return movieHTML;
 }
@@ -25,14 +25,14 @@ function buildModalHTML(modalObject){
     modalHTML += `<div class="modal-dialog">`
     modalHTML += `<div class="modal-content">`
     modalHTML += `<div class="modal-header">`
-    modalHTML += `<h5 class="modal-title">Editing: ${modalObject.title}</h5>`
+    modalHTML += `<h5 class="modal-title"><span class="heading-font-cards">Editing:</span> ${modalObject.title}</h5>`
     modalHTML += `<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>`
     modalHTML += `</div>`
     modalHTML += `<div class="modal-body"><form>`
     modalHTML += `<div class="form-group">`
-    modalHTML += `<label for="editModalMovieTitle">New Title: </label><input type="text" class="form-control" id="editModalMovieTitle" aria-describedby="emailHelp" value="${modalObject.title}"></div>`
+    modalHTML += `<label for="editModalMovieTitle"><span class="heading-font-cards">New Title: </span></label><input type="text" class="form-control" id="editModalMovieTitle" aria-describedby="emailHelp" value="${modalObject.title}"></div>`
     modalHTML += `<div class="form-group">`
-    modalHTML += `<p data-rating="${modalObject.rating}">New Rating: (Currently: ${modalObject.rating})</p>`
+    modalHTML += `<p data-rating="${modalObject.rating}"><span class="heading-font-cards">New Rating: </span> (Currently: ${modalObject.rating})</p>`
     modalHTML += `<div class="form-check form-check-inline" id="editModalMovieRating">`
     modalHTML += `<input class="form-check-input" type="radio" name="inlineRadioEditOptions" id="inlineEditRadio1" value="1"><label class="form-check-label" for="inlineEditRadio1"> 1</label></div>`
     modalHTML += `<div class="form-check form-check-inline">`
@@ -45,7 +45,7 @@ function buildModalHTML(modalObject){
     modalHTML += `<input class="form-check-input" type="radio" name="inlineRadioEditOptions" id="inlineEditRadio5" value="5"><label class="form-check-label" for="inlineEditRadio5"> 5</label></div>`
     modalHTML += `</div></form></div>`
     modalHTML += `<div class="modal-footer">`
-    modalHTML += `<button id="save-edits-button" data-id="${modalObject.id}" type="button" class="btn btn-primary">Save edits</button></div>`
+    modalHTML += `<button id="save-edits-button" data-id="${modalObject.id}" type="button" class="btn btn-danger heading-font-cards">Save edits</button></div>`
     modalHTML += `</div></div>`
 
     return modalHTML;

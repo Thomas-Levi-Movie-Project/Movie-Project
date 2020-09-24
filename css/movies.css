@@ -1,1 +1,10 @@
-
+* {
+    font-family: 'Merriweather', serif;
+}
+.heading-font-cards {
+    font-family: 'Metal Mania', cursive;
+    font-size: 1.5em;
+}
+.heading-font {
+    font-family: 'Metal Mania', cursive;
+}
