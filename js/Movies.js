@@ -127,6 +127,21 @@ function updateMovie(movieObject, movieID){
         .then(response => console.log(response))
         .then(() => {
             $("#edit-modal-container").modal("hide")
+            displayLoading();
+            fetch(url)
+                .then(response => response.json())
+                .then(listOfMovies => {
+                    $("#movies-cards-container").empty();
+                    listOfMovies.forEach(function (element) {
+                        appendMovieHTML(buildMovieCard(element));
+                    })
+                    // todo We needed this event listener to be after the cards are populated, otherwise there were issues with the scope
+                    setupListeners();
+                    setTimeout(function(){
+                        $("#loading-message").modal("hide");
+                    }, 3000);
+                })
+                .catch(error => console.error(error));
         })
         .catch(error => console.error(error))
 }
