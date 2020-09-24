@@ -1,11 +1,7 @@
 const url = "https://changeable-sharp-talk.glitch.me/movies"
 
 function displayLoading() {
-    $("#loading-message").modal("show")
-}
-
-function disableLoading() {
-    $("#loading-message").modal("hide");
+    $("#loading-message").modal("show");
 }
 
 function toggleMovieHTML() {
@@ -103,10 +99,13 @@ function pushToMovies(movieObject) {
 }
 
 $(document).ready(function () {
+    displayLoading();
+    setTimeout(function () {
+        $("#loading-message").modal("hide");
+    },3000)
     fetch(url)
         .then(response => response.json())
             .then(listOfMovies => {
-                displayLoading();
                 listOfMovies.forEach(function (element) {
                     appendMovieHTML(buildMovieCard(element));
                 })
@@ -114,13 +113,6 @@ $(document).ready(function () {
                 setupListeners();
             })
         .catch(error => console.error(error));
-
-    fetch(url)
-        .then(response => console.log(response.json()))
-        .then(modalClose =>{
-            disableLoading()
-        });
-
 
 
     $("#add-btn").click((e) => {
