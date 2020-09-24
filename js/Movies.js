@@ -10,13 +10,50 @@ function toggleMovieHTML() {
 // todo: Function to build a movie card using a movie object
 function buildMovieCard(movieObject) {
     let movieHTML = "";
-        movieHTML += `<div class="card" data-id="${movieObject.id}"><div class="card-body">`
+        movieHTML += `<div class="card"><div class="card-body">`
         movieHTML += `<button type="button" data-id="${movieObject.id}" id="${movieObject.id}-button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>`
-        movieHTML += `<h5 class="card-title">Title: ${movieObject.title}</h5>`
-        movieHTML += `<p class="card-text">Rating: ${movieObject.rating}</p>`
+        movieHTML += `<h5 class="card-title" data-title="${movieObject.title}">Title: ${movieObject.title}</h5>`
+        movieHTML += `<p class="card-text" data-rating="${movieObject.rating}">Rating: ${movieObject.rating}</p>`
         movieHTML += `<p class="card-text">ID: ${movieObject.id}</p>`
+        movieHTML += `<button type="button" data-id="${movieObject.id}" id="${movieObject.id}-edit-button" class="edit-btn btn btn-primary" data-dismiss="modal" aria-label="Edit"><span aria-hidden="true">Edit Movie</span></button>`
         movieHTML += `</div></div>`
     return movieHTML;
+}
+
+function buildModalHTML(modalObject){
+    let modalHTML = "";
+    modalHTML += `<div class="modal-dialog">`
+    modalHTML += `<div class="modal-content">`
+    modalHTML += `<div class="modal-header">`
+    modalHTML += `<h5 class="modal-title">Editing: ${modalObject.title}</h5>`
+    modalHTML += `<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>`
+    modalHTML += `</div>`
+    modalHTML += `<div class="modal-body"><form>`
+    modalHTML += `<div class="form-group">`
+    modalHTML += `<label for="editModalMovieTitle">New Title: </label><input type="text" class="form-control" id="editModalMovieTitle" aria-describedby="emailHelp" value="${modalObject.title}"></div>`
+    modalHTML += `<div class="form-group">`
+    modalHTML += `<p data-rating="${modalObject.rating}">New Rating: (Currently: ${modalObject.rating})</p>`
+    modalHTML += `<div class="form-check form-check-inline" id="editModalMovieRating">`
+    modalHTML += `<input class="form-check-input" type="radio" name="inlineRadioEditOptions" id="inlineEditRadio1" value="1"><label class="form-check-label" for="inlineEditRadio1"> 1</label></div>`
+    modalHTML += `<div class="form-check form-check-inline">`
+    modalHTML += `<input class="form-check-input" type="radio" name="inlineRadioEditOptions" id="inlineEditRadio2" value="2"><label class="form-check-label" for="inlineEditRadio2"> 2</label></div>`
+    modalHTML += `<div class="form-check form-check-inline">`
+    modalHTML += `<input class="form-check-input" type="radio" name="inlineRadioEditOptions" id="inlineEditRadio3" value="3"><label class="form-check-label" for="inlineEditRadio3"> 3</label></div>`
+    modalHTML += `<div class="form-check form-check-inline">`
+    modalHTML += `<input class="form-check-input" type="radio" name="inlineRadioEditOptions" id="inlineEditRadio4" value="4"><label class="form-check-label" for="inlineEditRadio4"> 4</label></div>`
+    modalHTML += `<div class="form-check form-check-inline">`
+    modalHTML += `<input class="form-check-input" type="radio" name="inlineRadioEditOptions" id="inlineEditRadio5" value="5"><label class="form-check-label" for="inlineEditRadio5"> 5</label></div>`
+    modalHTML += `</div></form></div>`
+    modalHTML += `<div class="modal-footer">`
+    modalHTML += `<button id="save-edits-button" data-id="${modalObject.id}" type="button" class="btn btn-primary">Save edits</button></div>`
+    modalHTML += `</div></div>`
+
+    return modalHTML;
+}
+
+function appendModalHTML(modalHTML){
+    $("#edit-modal-container").empty();
+    $("#edit-modal-container").append(modalHTML);
 }
 
 function appendMovieHTML(movieHTML){
@@ -26,8 +63,28 @@ function appendMovieHTML(movieHTML){
 function setupListeners(){
     $(".close").click(function() {
         deleteMovies($(this).attr("data-id"))
-        console.log("Movie ID: ", $(this).attr("data-id"));
         console.log("Movie Deleted");
+    })
+    $(".edit-btn").click(function(){
+        let modalObject = {
+            id: $(this).attr("data-id"),
+            title: $(this).parent().children("h5").attr("data-title"),
+            rating: $(this).parent().children("p").first().attr("data-rating")
+        }
+        console.log("Modal Object: ", modalObject)
+        appendModalHTML(buildModalHTML(modalObject));
+        $("#edit-modal-container").modal("show")
+        $("#save-edits-button").click(function(){
+            console.log($(this));
+            let updatedMovieID = $(this).attr("data-id")
+            console.log(updatedMovieID);
+            let updatedMovieObject = {
+                title: $("#editModalMovieTitle").val(),
+                rating: $("input[name='inlineRadioEditOptions']:checked").val()
+            }
+            console.log(updatedMovieObject);
+            updateMovie(updatedMovieObject, updatedMovieID);
+        })
     })
 }
 
@@ -56,6 +113,22 @@ function deleteMovies(movieId) {
             })
         });
 // .catch(error => console.error(error))
+}
+
+function updateMovie(movieObject, movieID){
+    const options = {
+        "method": "PUT",
+        "headers": {
+            "Content-Type": "application/json",
+        },
+        "body": JSON.stringify(movieObject)
+    };
+    fetch(`${url}/${movieID}`,options)
+        .then(response => console.log(response))
+        .then(() => {
+            $("#edit-modal-container").modal("hide")
+        })
+        .catch(error => console.error(error))
 }
 
 function pushToMovies(movieObject) {
@@ -127,3 +200,5 @@ $("#save-changes-button").click(function () {
    createMovies();
 
 })
+
+
