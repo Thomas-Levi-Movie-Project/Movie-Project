@@ -36,9 +36,9 @@ function deleteMovies(movieId) {
                 listOfMovies.forEach(function (element) {
                     appendMovieHTML(buildMovieCard(element));
                 })
-            })
-            });
 
+            })
+        });
 
 
 
