@@ -1,7 +1,7 @@
 const url = "https://changeable-sharp-talk.glitch.me/movies"
 
-function toggleLoading() {
-    $("#loading-message").toggleClass("d-none");
+function displayLoading() {
+    $("#loading-message").modal("show");
 }
 
 function toggleMovieHTML() {
@@ -88,6 +88,14 @@ function setupListeners(){
     })
 }
 
+function createMovies() {
+        let movieObject = {
+            title: $("#modalMovieTitle").val(),
+            rating: $("input[name='inlineRadioOptions']:checked").val()
+        }
+        pushToMovies(movieObject);
+}
+
 function deleteMovies(movieId) {
     const deleteOptions ={
         method: "DELETE",
@@ -97,12 +105,10 @@ function deleteMovies(movieId) {
         .then( moviesRerender =>{ fetch(url)
             .then(response => response.json())
             .then(listOfMovies => {
-                toggleLoading();
                 $("#movies-cards-container").empty();
                 listOfMovies.forEach(function (element) {
                     appendMovieHTML(buildMovieCard(element));
                 })
-                toggleLoading();
                 setupListeners();
             })
         });
@@ -137,35 +143,42 @@ function pushToMovies(movieObject) {
     fetch(url,options)
         .then(response => console.log(response))
         .catch(error => console.error(error))
+        .then( movieLoad => {
+            fetch(url)
+                .then(response => response.json())
+                .then(listOfMovies => {
+                    let newestMovie = listOfMovies[listOfMovies.length - 1]
+                    console.log(newestMovie);
+                    appendMovieHTML(buildMovieCard(newestMovie));
+                    toggleMovieHTML();
+                    setupListeners();
+                    // todo get the HTML appended properly, not currently appending for some reason
+                })
+        })
 
     // Modal closes
     $("#add-modal").modal("hide");
 
     // HTML disappears, Loading appears
     toggleMovieHTML();
-    toggleLoading();
+    // toggleLoading();
 
-    fetch(url)
-        .then(response => response.json())
-        .then(listOfMovies => {
-            let newestMovie = listOfMovies[listOfMovies.length - 1]
-            appendMovieHTML(buildMovieCard(newestMovie));
-            toggleLoading();
-            toggleMovieHTML();
-            setupListeners();
 
-            // todo get the HTML appended properly, not currently appending for some reason
-        })
-        .catch(error => console.error(error));
 
-    // HTML refreshed
+
+
+
+
 }
 
 $(document).ready(function () {
+    displayLoading();
+    setTimeout(function () {
+        $("#loading-message").modal("hide");
+    },3000)
     fetch(url)
         .then(response => response.json())
             .then(listOfMovies => {
-                toggleLoading();
                 listOfMovies.forEach(function (element) {
                     appendMovieHTML(buildMovieCard(element));
                 })
@@ -174,19 +187,18 @@ $(document).ready(function () {
             })
         .catch(error => console.error(error));
 
+
     $("#add-btn").click((e) => {
         e.preventDefault();
         $("#add-modal").modal("show")
     })
 
+
 });
 
 $("#save-changes-button").click(function () {
-    let movieObject = {
-        title: $("#modalMovieTitle").val(),
-        rating: $("input[name='inlineRadioOptions']:checked").val()
-    }
-    pushToMovies(movieObject);
+   createMovies();
+
 })
 
 
