@@ -11,7 +11,7 @@ function toggleMovieHTML() {
 function buildMovieCard(movieObject) {
     let movieHTML = "";
         movieHTML += `<div class="card my-3"><div class="card-body">`
-        movieHTML += `<button type="button" data-id="${movieObject.id}" id="${movieObject.id}-button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>`
+        movieHTML += `<button type="button" data-id="${movieObject.id}" id="${movieObject.id}-button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fas fa-trash text-danger"></i></span></button>`
         movieHTML += `<h5 class="card-title" data-title="${movieObject.title}"><span class="heading-font-cards">Title:</span> ${movieObject.title}</h5>`
         movieHTML += `<p class="card-text" data-rating="${movieObject.rating}"><span class="heading-font-cards">Rating:</span> ${movieObject.rating}</p>`
         // movieHTML += `<p class="card-text">ID: ${movieObject.id}</p>`
@@ -139,7 +139,7 @@ function updateMovie(movieObject, movieID){
                     setupListeners();
                     setTimeout(function(){
                         $("#loading-message").modal("hide");
-                    }, 3000);
+                    }, 10000);
                 })
                 .catch(error => console.error(error));
         })
