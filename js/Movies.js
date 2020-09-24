@@ -7,6 +7,21 @@ function toggleLoading() {
 function toggleMovieHTML() {
     $("#movies-cards-container").toggleClass("d-none");
 }
+// todo: Function to build a movie card using a movie object
+function buildMovieCard(movieObject) {
+    let movieHTML = "";
+        movieHTML += `<div class="card" data-id="${movieObject.id}"><div class="card-body">`
+        movieHTML += `<button type="button" data-id="${movieObject.id}" id="${movieObject.id}-button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>`
+        movieHTML += `<h5 class="card-title">Title: ${movieObject.title}</h5>`
+        movieHTML += `<p class="card-text">Rating: ${movieObject.rating}</p>`
+        movieHTML += `<p class="card-text">ID: ${movieObject.id}</p>`
+        movieHTML += `</div></div>`
+    return movieHTML;
+}
+
+function appendMovieHTML(movieHTML){
+    $("#movies-cards-container").append(movieHTML);
+}
 
 function deleteMovies(movieId) {
     const deleteOptions ={
@@ -18,18 +33,10 @@ function deleteMovies(movieId) {
             .then(response => response.json())
             .then(listOfMovies => {
                 toggleLoading();
-                let moviesHTML = "";
                 listOfMovies.forEach(function (element) {
-                    moviesHTML += `<div class="card" data-id="${element.id}"><div class="card-body">`
-                    moviesHTML += `<button type="button" data-id="${element.id}" id="${element.id}-button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>`
-                    moviesHTML += `<h5 class="card-title">Title: ${element.title}</h5>`
-                    moviesHTML += `<p class="card-text">Rating: ${element.rating}</p>`
-                    moviesHTML += `<p class="card-text">ID: ${element.id}</p>`
-                    moviesHTML += `</div></div>`
+                    appendMovieHTML(buildMovieCard(element));
                 })
-                $("#movies-cards-container").empty(); //this is new
-                $("#movies-cards-container").append(moviesHTML);
-                toggleLoading(); //this is new
+
             })
         });
 
@@ -61,16 +68,8 @@ function pushToMovies(movieObject) {
     fetch(url)
         .then(response => response.json())
         .then(listOfMovies => {
-            let moviesHTML = "";
-            moviesHTML += `<div class="card" data-id="${listOfMovies[listOfMovies.length - 1].id}"><div class="card-body">`
-            moviesHTML += `<button type="button" data-id="${listOfMovies[listOfMovies.length - 1].id}" id="${listOfMovies[listOfMovies.length - 1].id}-button" class="close" data-dismiss="modal" aria-label="Close">
-                                   <span aria-hidden="true">&times;</span></button>`
-            moviesHTML += `<h5 class="card-title">Title: ${listOfMovies[listOfMovies.length - 1].title}</h5>`
-            moviesHTML += `<p class="card-text">Rating: ${listOfMovies[listOfMovies.length - 1].rating}</p>`
-            moviesHTML += `<p class="card-text">ID: ${listOfMovies[listOfMovies.length - 1].id}</p>`
-            moviesHTML += `</div></div>`
-
-            $("#movies-cards-container").append(moviesHTML);
+            let newestMovie = listOfMovies[listOfMovies.length - 1]
+            appendMovieHTML(buildMovieCard(newestMovie));
             toggleLoading();
             toggleMovieHTML();
 
@@ -86,16 +85,9 @@ $(document).ready(function () {
         .then(response => response.json())
             .then(listOfMovies => {
                 toggleLoading();
-                let moviesHTML = "";
                 listOfMovies.forEach(function (element) {
-                    moviesHTML += `<div class="card" data-id="${element.id}"><div class="card-body">`
-                    moviesHTML += `<button type="button" data-id="${element.id}" id="${element.id}-button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>`
-                    moviesHTML += `<h5 class="card-title">Title: ${element.title}</h5>`
-                    moviesHTML += `<p class="card-text">Rating: ${element.rating}</p>`
-                    moviesHTML += `<p class="card-text">ID: ${element.id}</p>`
-                    moviesHTML += `</div></div>`
+                    appendMovieHTML(buildMovieCard(element));
                 })
-                $("#movies-cards-container").append(moviesHTML);
 
 
                 // todo We needed this event listener to be after the cards are populated, otherwise there were issues with the scope
