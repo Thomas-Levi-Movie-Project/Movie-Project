@@ -27,10 +27,11 @@ function deleteMovies(movieId) {
                     moviesHTML += `<p class="card-text">ID: ${element.id}</p>`
                     moviesHTML += `</div></div>`
                 })
+                $("#movies-cards-container").empty(); //this is new
                 $("#movies-cards-container").append(moviesHTML);
+                toggleLoading(); //this is new
             })
-            });
-
+        });
 
 
 
