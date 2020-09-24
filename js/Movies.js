@@ -23,6 +23,14 @@ function appendMovieHTML(movieHTML){
     $("#movies-cards-container").append(movieHTML);
 }
 
+function setupListeners(){
+    $(".close").click(function() {
+        deleteMovies($(this).attr("data-id"))
+        console.log("Movie ID: ", $(this).attr("data-id"));
+        console.log("Movie Deleted");
+    })
+}
+
 function deleteMovies(movieId) {
     const deleteOptions ={
         method: "DELETE",
@@ -33,15 +41,14 @@ function deleteMovies(movieId) {
             .then(response => response.json())
             .then(listOfMovies => {
                 toggleLoading();
+                $("#movies-cards-container").empty();
                 listOfMovies.forEach(function (element) {
                     appendMovieHTML(buildMovieCard(element));
                 })
-
+                toggleLoading();
+                setupListeners();
             })
         });
-
-
-
 // .catch(error => console.error(error))
 }
 
@@ -72,6 +79,7 @@ function pushToMovies(movieObject) {
             appendMovieHTML(buildMovieCard(newestMovie));
             toggleLoading();
             toggleMovieHTML();
+            setupListeners();
 
             // todo get the HTML appended properly, not currently appending for some reason
         })
@@ -88,31 +96,8 @@ $(document).ready(function () {
                 listOfMovies.forEach(function (element) {
                     appendMovieHTML(buildMovieCard(element));
                 })
-
-
                 // todo We needed this event listener to be after the cards are populated, otherwise there were issues with the scope
-                $(".close").click(function() {
-                    deleteMovies($(this).attr("data-id"))
-                    console.log("Movie ID: ", $(this).attr("data-id"));
-                    console.log("Movie Deleted");
-                    // $("#movies-cards-container").empty();
-                    // fetch(url)
-                    //     .then(response => response.json())
-                    //     .then(listOfMovies =>{
-                    //         toggleLoading();
-                    //         let moviesHTML = "";
-                    //         listOfMovies.forEach(function(element) {
-                    //             moviesHTML += `<div class="card" data-id="${element.id}"><div class="card-body">`
-                    //             moviesHTML += `<button type="button" data-id="${element.id}" id="${element.id}-button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>`
-                    //             moviesHTML += `<h5 class="card-title">Title: ${element.title}</h5>`
-                    //             moviesHTML += `<p class="card-text">Rating: ${element.rating}</p>`
-                    //             moviesHTML += `<p class="card-text">ID: ${element.id}</p>`
-                    //             moviesHTML += `</div></div>`
-                    //         })
-                    //         $("#movies-cards-container").append(moviesHTML);
-                    //     });
-
-                })
+                setupListeners();
             })
         .catch(error => console.error(error));
 
