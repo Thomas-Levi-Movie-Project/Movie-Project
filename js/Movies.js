@@ -11,7 +11,7 @@ function toggleMovieHTML() {
 function buildMovieCard(movieObject) {
     let movieHTML = "";
         movieHTML += `<div class="card my-3"><div class="card-body">`
-        movieHTML += `<button type="button" data-id="${movieObject.id}" id="${movieObject.id}-button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fas fa-trash text-danger"></i></span></button>`
+        movieHTML += `<button type="button" data-id="${movieObject.id}" id="${movieObject.id}-button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i id="delete-button" class="fas fa-trash text-danger"></i></span></button>`
         movieHTML += `<h5 class="card-title" data-title="${movieObject.title}"><span class="heading-font-cards">Title:</span> ${movieObject.title}</h5>`
         movieHTML += `<p class="card-text" data-rating="${movieObject.rating}"><span class="heading-font-cards">Rating:</span> ${movieObject.rating}</p>`
         // movieHTML += `<p class="card-text">ID: ${movieObject.id}</p>`
@@ -62,8 +62,14 @@ function appendMovieHTML(movieHTML){
 
 function setupListeners(){
     $(".close").click(function() {
-        deleteMovies($(this).attr("data-id"))
-        console.log("Movie Deleted");
+        let userDelete = confirm("Are you sure you want to delete this message?");
+        if (userDelete === true){
+            deleteMovies($(this).attr("data-id"));
+            console.log("Movie Deleted");
+        }
+        // $("#deletion-message").modal("show");
+        // deleteMovies($(this).attr("data-id"));
+        // console.log("Movie Deleted");
     })
     $(".edit-btn").click(function(){
         let modalObject = {
@@ -139,7 +145,7 @@ function updateMovie(movieObject, movieID){
                     setupListeners();
                     setTimeout(function(){
                         $("#loading-message").modal("hide");
-                    }, 10000);
+                    }, 3000);
                 })
                 .catch(error => console.error(error));
         })
