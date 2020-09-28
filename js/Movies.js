@@ -145,7 +145,7 @@ function updateMovie(movieObject, movieID){
                     setupListeners();
                     setTimeout(function(){
                         $("#loading-message").modal("hide");
-                    }, 3500);
+                    }, 3000);
                 })
                 .catch(error => console.error(error));
         })
