@@ -62,9 +62,14 @@ function appendMovieHTML(movieHTML){
 
 function setupListeners(){
     $(".close").click(function() {
-        alert("Do you want to delete this movie?");
-        deleteMovies($(this).attr("data-id"));
-        console.log("Movie Deleted");
+        let userDelete = confirm("Are you sure you want to delete this message?");
+        if (userDelete === true){
+            deleteMovies($(this).attr("data-id"));
+            console.log("Movie Deleted");
+        }
+        // $("#deletion-message").modal("show");
+        // deleteMovies($(this).attr("data-id"));
+        // console.log("Movie Deleted");
     })
     $(".edit-btn").click(function(){
         let modalObject = {
